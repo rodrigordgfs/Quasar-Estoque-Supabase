@@ -24,17 +24,17 @@ export default function useAuth() {
     return !!user.value;
   };
 
-  const register = async ({ email, password, ...meta }) => {
-    const { user, error } = await supabase.auth.signUp(
-      {
-        email,
-        password,
+  const register = async ({ email, password, name }) => {
+    const { user, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+        },
+        emailRedirectTo: `${window.location.origin}/?fromEmail=registerSuccess`,
       },
-      {
-        data: meta,
-        redirectTo: `${window.location.origin}/me?fromEmail=registrationConfirmation}`,
-      }
-    );
+    });
     if (error) throw error;
     return user;
   };
@@ -54,8 +54,8 @@ export default function useAuth() {
   };
 
   return {
+    user,
     login,
-    loginWithSocialProvider,
     logout,
     isLogged,
     register,
