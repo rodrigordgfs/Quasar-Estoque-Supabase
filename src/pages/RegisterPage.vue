@@ -46,6 +46,7 @@ import { defineComponent, reactive } from "vue";
 import useAuth from "src/composables/UseAuth";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import useNotify from "src/composables/UseNotify";
 
 export default defineComponent({
   name: "RegisterPage",
@@ -54,6 +55,7 @@ export default defineComponent({
     const $q = useQuasar();
     const router = useRouter();
     const { register } = useAuth();
+    const { notifySuccess, notifyError } = useNotify();
 
     const state = reactive({
       form: {
@@ -69,13 +71,7 @@ export default defineComponent({
           message: "Por favor! Aguarde!",
         });
         await register(state.form).then(() => {
-          $q.notify({
-            message: "Cadastro efetuado com sucesso! Confirme seu email!",
-            icon: "check",
-            color: "positive",
-            position: "bottom",
-            timeout: 3000,
-          });
+          notifySuccess("Cadastro efetuado com sucesso! Confirme seu email!");
           router.push({
             name: "EmailConfirmation",
             query: { email: state.form.email },
@@ -84,13 +80,7 @@ export default defineComponent({
         });
       } catch (error) {
         $q.loading.hide();
-        $q.notify({
-          message: error.message,
-          icon: "warning",
-          color: "negative",
-          position: "bottom",
-          timeout: 3000,
-        });
+        notifyError(error.message);
       }
     };
 

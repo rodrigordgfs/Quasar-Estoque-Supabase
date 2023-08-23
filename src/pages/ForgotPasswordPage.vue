@@ -34,6 +34,7 @@ import { defineComponent, reactive } from "vue";
 import useAuth from "src/composables/UseAuth";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import useNotify from "src/composables/UseNotify";
 
 export default defineComponent({
   name: "ForgotPasswordPage",
@@ -42,6 +43,7 @@ export default defineComponent({
     const $q = useQuasar();
     const router = useRouter();
     const { sendResetPassword } = useAuth();
+    const { notifySuccess, notifyError } = useNotify();
 
     const state = reactive({
       form: {
@@ -55,13 +57,7 @@ export default defineComponent({
           message: "Por favor! Aguarde!",
         });
         await sendResetPassword(state.form.email).then(() => {
-          $q.notify({
-            message: "E-mail enviado com sucesso! Verifique seu e-mail!",
-            icon: "check",
-            color: "positive",
-            position: "bottom",
-            timeout: 3000,
-          });
+          notifySuccess("E-mail enviado com sucesso! Verifique seu e-mail!");
           router.push({
             name: "Login",
           });
@@ -69,13 +65,7 @@ export default defineComponent({
         });
       } catch (error) {
         $q.loading.hide();
-        $q.notify({
-          message: error.message,
-          icon: "warning",
-          color: "negative",
-          position: "bottom",
-          timeout: 3000,
-        });
+        notifyError(error.message);
       }
     };
 

@@ -45,6 +45,7 @@ import { defineComponent, reactive } from "vue";
 import useAuth from "src/composables/UseAuth";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import useNotify from "src/composables/UseNotify";
 
 export default defineComponent({
   name: "LoginPage",
@@ -53,6 +54,7 @@ export default defineComponent({
     const $q = useQuasar();
     const router = useRouter();
     const { login } = useAuth();
+    const { notifySuccess, notifyError } = useNotify();
 
     const state = reactive({
       form: {
@@ -67,25 +69,13 @@ export default defineComponent({
           message: "Por favor! Aguarde!",
         });
         await login(state.form).then(() => {
-          $q.notify({
-            message: "Login efetuado com sucesso!",
-            icon: "check",
-            color: "positive",
-            position: "bottom",
-            timeout: 3000,
-          });
-          router.push({ name: "Home" });
           $q.loading.hide();
+          notifySuccess("Login efetuado com sucesso!");
+          router.push({ name: "Home" });
         });
       } catch (error) {
         $q.loading.hide();
-        $q.notify({
-          message: error.message,
-          icon: "warning",
-          color: "negative",
-          position: "bottom",
-          timeout: 3000,
-        });
+        notifyError(error.message);
       }
     };
 
