@@ -8,6 +8,8 @@
           type="email"
           label="E-mail"
           autocomplete="email"
+          lazy-rules
+          :rules="[(val) => !!val || 'Por favor! Preencha o campo e-mail']"
         />
         <div class="full-width q-gutter-y-md">
           <q-btn

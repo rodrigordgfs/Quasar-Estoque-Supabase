@@ -8,12 +8,19 @@
           type="email"
           label="E-mail"
           autocomplete="email"
+          lazy-rules
+          :rules="[(val) => !!val || 'Por favor! Preencha o campo e-mail']"
         />
         <q-input
           v-model="state.form.password"
           type="password"
           label="Senha"
           autocomplete="current-password"
+          lazy-rules
+          :rules="[
+            (val && val.length >= 6) ||
+              'O campo senha precisa ter 6 ou mais caracteres',
+          ]"
         />
         <q-btn
           color="primary"

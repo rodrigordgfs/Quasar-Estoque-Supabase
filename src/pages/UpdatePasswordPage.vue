@@ -15,6 +15,12 @@
             type="submit"
             label="Atualizar senha"
             class="full-width"
+            lazy-rules
+            :rules="[
+              (val) =>
+                (val && val.length >= 6) ||
+                'O campo senha precisa ter 6 ou mais caracteres',
+            ]"
           />
         </div>
       </div>

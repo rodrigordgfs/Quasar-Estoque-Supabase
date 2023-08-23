@@ -5,6 +5,13 @@
       Por favor! Confirme seu e-mail para finalizar seu registro:
       <span class="text-bold">{{ $route.query.email }}</span>
     </p>
+    <q-btn
+      color="primary"
+      label="Voltar para o login"
+      class="full-width"
+      flat
+      :to="{ name: 'Login' }"
+    />
   </q-page>
 </template>
 
