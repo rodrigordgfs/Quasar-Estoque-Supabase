@@ -28,6 +28,16 @@ const routes = [
         component: () => import("pages/RegisterPage.vue"),
       },
       {
+        path: "/forgot-password",
+        name: "ForgotPassword",
+        component: () => import("pages/ForgotPasswordPage.vue"),
+      },
+      {
+        path: "/update-password",
+        name: "UpdatePassword",
+        component: () => import("pages/UpdatePasswordPage.vue"),
+      },
+      {
         path: "/email-confirmation",
         name: "EmailConfirmation",
         component: () => import("pages/EmailConfirmationPage.vue"),

@@ -1,40 +1,22 @@
 <template>
   <q-page padding>
-    <q-form @submit.prevent="handleSubmit" class="row justify-center">
-      <p class="text-h6 text-center col-12">Login</p>
+    <q-form @submit.prevent="handleUpdatePassword" class="row justify-center">
+      <p class="text-h6 text-center col-12">Nova senha</p>
       <div class="col-md-4 col-sm-6 col-xs-10 q-gutter-y-md">
-        <q-input
-          v-model="state.form.email"
-          type="email"
-          label="E-mail"
-          autocomplete="email"
-        />
         <q-input
           v-model="state.form.password"
           type="password"
-          label="Senha"
-          autocomplete="current-password"
+          label="Nova senha"
+          autocomplete="new-password"
         />
-        <q-btn
-          color="primary"
-          type="submit"
-          label="Entrar"
-          class="full-width"
-        />
-        <q-btn
-          color="primary"
-          label="Crie sua conta"
-          class="full-width"
-          flat
-          :to="{ name: 'Register' }"
-        />
-        <q-btn
-          color="primary"
-          label="Esqueci minha senha"
-          class="full-width"
-          flat
-          :to="{ name: 'ForgotPassword' }"
-        />
+        <div class="full-width q-gutter-y-md">
+          <q-btn
+            color="primary"
+            type="submit"
+            label="Atualizar senha"
+            class="full-width"
+          />
+        </div>
       </div>
     </q-form>
   </q-page>
@@ -43,38 +25,40 @@
 <script>
 import { defineComponent, reactive } from "vue";
 import useAuth from "src/composables/UseAuth";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useQuasar } from "quasar";
 
 export default defineComponent({
-  name: "LoginPage",
+  name: "UpdatePasswordPage",
 
   setup() {
     const $q = useQuasar();
     const router = useRouter();
-    const { login } = useAuth();
+    const route = useRoute();
+    const { resetPassword } = useAuth();
 
     const state = reactive({
       form: {
-        email: "",
         password: "",
       },
     });
 
-    const handleSubmit = async () => {
+    const handleUpdatePassword = async () => {
       try {
         $q.loading.show({
           message: "Por favor! Aguarde!",
         });
-        await login(state.form).then(() => {
+        await resetPassword(state.form.password).then(() => {
           $q.notify({
-            message: "Login efetuado com sucesso!",
+            message: "Senha atualizada com sucesso!",
             icon: "check",
             color: "positive",
             position: "bottom",
             timeout: 3000,
           });
-          router.push({ name: "Home" });
+          router.push({
+            name: "Login",
+          });
           $q.loading.hide();
         });
       } catch (error) {
@@ -91,7 +75,7 @@ export default defineComponent({
 
     return {
       state,
-      handleSubmit,
+      handleUpdatePassword,
     };
   },
 });

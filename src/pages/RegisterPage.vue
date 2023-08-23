@@ -21,12 +21,21 @@
           label="Senha"
           autocomplete="current-password"
         />
-        <q-btn
-          color="primary"
-          type="submit"
-          label="Criar sua conta"
-          class="full-width"
-        />
+        <div class="full-width q-gutter-y-md">
+          <q-btn
+            color="primary"
+            type="submit"
+            label="Criar sua conta"
+            class="full-width"
+          />
+          <q-btn
+            flat
+            color="primary"
+            label="Voltar"
+            class="full-width"
+            :to="{ name: 'Login' }"
+          />
+        </div>
       </div>
     </q-form>
   </q-page>

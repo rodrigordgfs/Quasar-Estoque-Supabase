@@ -46,9 +46,17 @@ export default function useAuth() {
   };
 
   const sendResetPassword = async (email) => {
-    const { user, error } = await supabase.auth.api.resetPasswordForEmail(
-      email
-    );
+    const { user, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/update-password`,
+    });
+    if (error) throw error;
+    return user;
+  };
+
+  const resetPassword = async (password) => {
+    const { user, error } = await supabase.auth.updateUser({
+      password,
+    });
     if (error) throw error;
     return user;
   };
@@ -59,6 +67,7 @@ export default function useAuth() {
     logout,
     isLogged,
     register,
+    resetPassword,
     updateProfile,
     sendResetPassword,
   };
