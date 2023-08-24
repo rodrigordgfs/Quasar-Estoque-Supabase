@@ -6,7 +6,22 @@ const routes = [
       {
         path: "",
         name: "Home",
-        component: () => import("pages/HomePage.vue"),
+        component: () => import("pages/Home.vue"),
+        meta: {
+          menu: true,
+          icon: "home",
+          title: "Home",
+        },
+      },
+      {
+        path: "/category",
+        name: "Category",
+        component: () => import("pages/Category.vue"),
+        meta: {
+          menu: true,
+          icon: "category",
+          title: "Categorias",
+        },
       },
     ],
     meta: {
@@ -18,29 +33,29 @@ const routes = [
     component: () => import("layouts/LoginLayout.vue"),
     children: [
       {
-        path: "login",
+        path: "/login",
         name: "Login",
-        component: () => import("pages/LoginPage.vue"),
+        component: () => import("pages/Login.vue"),
       },
       {
         path: "/register",
         name: "Register",
-        component: () => import("pages/RegisterPage.vue"),
+        component: () => import("pages/Register.vue"),
       },
       {
         path: "/forgot-password",
         name: "ForgotPassword",
-        component: () => import("pages/ForgotPasswordPage.vue"),
+        component: () => import("pages/ForgotPassword.vue"),
       },
       {
         path: "/update-password",
         name: "UpdatePassword",
-        component: () => import("pages/UpdatePasswordPage.vue"),
+        component: () => import("pages/UpdatePassword.vue"),
       },
       {
         path: "/email-confirmation",
         name: "EmailConfirmation",
-        component: () => import("pages/EmailConfirmationPage.vue"),
+        component: () => import("pages/EmailConfirmation.vue"),
       },
     ],
   },

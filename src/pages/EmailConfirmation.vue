@@ -1,5 +1,5 @@
 <template>
-  <q-page class="padding">
+  <q-page padding>
     <p class="text-body1 text-center">Obrigado por se registrar</p>
     <p class="text-center">
       Por favor! Confirme seu e-mail para finalizar seu registro:
