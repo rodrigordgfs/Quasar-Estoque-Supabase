@@ -29,7 +29,12 @@
             >
               <q-tooltip> Editar categoria </q-tooltip>
             </q-btn>
-            <q-btn icon="delete" color="negative" dense>
+            <q-btn
+              icon="delete"
+              color="negative"
+              dense
+              @click="() => handleDelete(props.row)"
+            >
               <q-tooltip> Deletar categoria </q-tooltip>
             </q-btn>
           </q-td>
@@ -40,6 +45,7 @@
 </template>
 
 <script>
+import { useQuasar } from "quasar";
 import useApi from "src/composables/UseApi";
 import useNotify from "src/composables/UseNotify";
 import { defineComponent, onMounted, reactive } from "vue";
@@ -74,9 +80,10 @@ export default defineComponent({
       rows: [],
     });
 
-    const { get } = useApi();
-    const { notifyError } = useNotify();
+    const { get, remove } = useApi();
+    const { notifyError, notifySuccess } = useNotify();
     const router = useRouter();
+    const $q = useQuasar();
 
     const handleGetCategories = async () => {
       try {
@@ -91,6 +98,27 @@ export default defineComponent({
       router.push({ name: "CategoryForm", params: { id: category.id } });
     };
 
+    const handleDelete = (category) => {
+      try {
+        $q.dialog({
+          title: "Deletar",
+          message: `Você deseja realmente deletar a categoria ${category.name}?`,
+          cancel: true,
+          persistent: true,
+        }).onOk(async () => {
+          state.loading = true;
+          await remove(category.id, TABLE).then(() => {
+            state.loading = false;
+            notifySuccess("Categoria deletada com sucesso!");
+            state.rows = state.rows.filter((row) => row.id !== category.id);
+          });
+        });
+      } catch (error) {
+        state.loading = false;
+        notifyError(error.message);
+      }
+    };
+
     onMounted(() => {
       handleGetCategories();
     });
@@ -98,6 +126,7 @@ export default defineComponent({
     return {
       state,
       handleEdit,
+      handleDelete,
     };
   },
 });
