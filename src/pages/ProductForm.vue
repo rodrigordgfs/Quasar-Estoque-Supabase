@@ -8,6 +8,23 @@
         @submit.prevent="handleSubmit"
         class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md"
       >
+        <div class="row-12 text-center" v-if="state.form.img_url">
+          <q-img
+            width="200px"
+            height="200px"
+            :src="state.form.img_url"
+            :ratio="16 / 9"
+            spinner-color="primary"
+            spinner-size="82px"
+          />
+        </div>
+        <q-input
+          label="Imagem"
+          stack-label
+          v-model="state.image"
+          type="file"
+          accept="image/*"
+        />
         <q-input
           label="Nome"
           v-model="state.form.name"
@@ -78,12 +95,14 @@ export default defineComponent({
         amount: 0,
         price: 0,
         category_id: null,
+        img_url: "",
       },
+      image: "",
       id: null,
       optionsCategory: [],
     });
 
-    const { create, get, getById, update } = useApi();
+    const { create, get, getById, update, uploadImage } = useApi();
     const router = useRouter();
     const route = useRoute();
     const $q = useQuasar();
@@ -108,7 +127,6 @@ export default defineComponent({
             name: category.name,
           };
         });
-        console.log(state.optionsCategory);
       } catch (error) {
         notifyError(error.message);
       }
@@ -117,6 +135,10 @@ export default defineComponent({
     const handleSubmit = async () => {
       try {
         state.loading = true;
+        if (state.image.length > 0) {
+          const imgUrl = await uploadImage(state.image[0], "products");
+          state.form.img_url = imgUrl;
+        }
         if (isUpdate.value) {
           await update(state.id, TABLE, state.form)
             .then(() => {
@@ -155,7 +177,9 @@ export default defineComponent({
           amount: data.amount,
           price: data.price,
           category_id: data.category_id,
+          img_url: data.img_url,
         };
+        console.log(state.form);
       } catch (error) {
         $q.loading.hide();
         notifyError(error.message);

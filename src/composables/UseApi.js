@@ -1,5 +1,6 @@
 import useSupabase from "src/boot/supabase";
 import useAuth from "./UseAuth";
+import { v4 as uuid } from "uuid";
 
 export default function useApi() {
   const { supabase } = useSupabase();
@@ -51,11 +52,33 @@ export default function useApi() {
     }
   };
 
+  const uploadImage = async (file, storage) => {
+    const fileName = uuid();
+    const { data, error } = await supabase.storage
+      .from(storage)
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+    const publicUrl = await getUrlPublic(fileName, storage);
+    if (error) throw error;
+    return publicUrl;
+  };
+
+  const getUrlPublic = async (fileName, storage) => {
+    const { data, error } = supabase.storage
+      .from(storage)
+      .getPublicUrl(fileName);
+    if (error) throw error;
+    return data.publicUrl;
+  };
+
   return {
     get,
     getById,
     create,
     update,
     remove,
+    uploadImage,
   };
 }
