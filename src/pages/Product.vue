@@ -22,9 +22,15 @@
 
         <template v-slot:body-cell-img_url="props">
           <q-td :props="props">
-            <q-avatar>
+            <q-avatar v-if="props.row?.img_url">
               <img :src="props.row.img_url" />
             </q-avatar>
+            <q-avatar
+              v-else
+              color="primary"
+              text-color="white"
+              icon="insert_photo"
+            />
           </q-td>
         </template>
 
@@ -66,6 +72,7 @@ import useApi from "src/composables/UseApi";
 import useNotify from "src/composables/UseNotify";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
+import { formatCurrency } from "src/utils/format";
 
 const TABLE = "product";
 
@@ -101,7 +108,7 @@ export default defineComponent({
           name: "pice",
           label: "Preço",
           align: "left",
-          field: (row) => row.price,
+          field: (row) => formatCurrency(row.price),
           sortable: true,
         },
         {
