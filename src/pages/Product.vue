@@ -12,6 +12,14 @@
           <span class="text-h6"> Produtos </span>
           <q-space />
           <q-btn
+            class="q-mr-sm"
+            color="primary"
+            icon="store"
+            label="Meu estoque"
+            outline
+            @click="handleGoToStock"
+          />
+          <q-btn
             v-if="$q.platform.is.desktop"
             icon="add"
             color="primary"
@@ -73,6 +81,7 @@ import useNotify from "src/composables/UseNotify";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { formatCurrency } from "src/utils/format";
+import useAuth from "src/composables/UseAuth";
 
 const TABLE = "product";
 
@@ -122,7 +131,8 @@ export default defineComponent({
       rows: [],
     });
 
-    const { get, remove } = useApi();
+    const { getPublic, remove } = useApi();
+    const { user } = useAuth();
     const { notifyError, notifySuccess } = useNotify();
     const router = useRouter();
     const $q = useQuasar();
@@ -130,7 +140,9 @@ export default defineComponent({
     const handleGetProducts = async () => {
       try {
         state.loading = true;
-        state.rows = await get(TABLE).finally(() => (state.loading = false));
+        state.rows = await getPublic(user.value.id, TABLE).finally(
+          () => (state.loading = false)
+        );
       } catch (error) {
         notifyError(error.message);
       }
@@ -161,6 +173,11 @@ export default defineComponent({
       }
     };
 
+    const handleGoToStock = () => {
+      const idUser = user.value.id;
+      router.push({ name: "ProductPublic", params: { id: idUser } });
+    };
+
     onMounted(() => {
       handleGetProducts();
     });
@@ -169,6 +186,7 @@ export default defineComponent({
       state,
       handleEdit,
       handleDelete,
+      handleGoToStock,
     };
   },
 });

@@ -77,6 +77,11 @@ const routes = [
         name: "EmailConfirmation",
         component: () => import("pages/EmailConfirmation.vue"),
       },
+      {
+        path: "/product-public/:id",
+        name: "ProductPublic",
+        component: () => import("pages/ProductPublic.vue"),
+      },
     ],
   },
 
