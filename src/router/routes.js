@@ -23,6 +23,11 @@ const routes = [
           title: "Categorias",
         },
       },
+      {
+        path: "/category-form/:id?",
+        name: "CategoryForm",
+        component: () => import("pages/CategoryForm.vue"),
+      },
     ],
     meta: {
       auth: true,

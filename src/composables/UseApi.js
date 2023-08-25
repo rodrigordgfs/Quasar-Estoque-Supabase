@@ -2,7 +2,7 @@ import useSupabase from "src/boot/supabase";
 import useAuth from "./UseAuth";
 
 export default function useApi() {
-  const supabase = useSupabase();
+  const { supabase } = useSupabase();
   const { user } = useAuth();
 
   const get = async (table) => {
@@ -18,7 +18,7 @@ export default function useApi() {
     return data;
   };
 
-  const getById = async ({ table, id }) => {
+  const getById = async (id, table) => {
     const { data, error } = await supabase.from(table).select("*").eq("id", id);
 
     if (error) {
@@ -28,7 +28,7 @@ export default function useApi() {
     return data[0];
   };
 
-  const create = async ({ table, data }) => {
+  const create = async (table, data) => {
     const { error } = await supabase
       .from(table)
       .insert({ ...data, user_id: user.value.id });
@@ -38,7 +38,7 @@ export default function useApi() {
     }
   };
 
-  const update = async ({ table, data, id }) => {
+  const update = async (id, table, data) => {
     const { error } = await supabase.from(table).update(data).match({ id });
 
     if (error) {
@@ -46,7 +46,7 @@ export default function useApi() {
     }
   };
 
-  const remove = async ({ table, id }) => {
+  const remove = async (id, table) => {
     const { error } = await supabase.from(table).delete().match({ id });
 
     if (error) {
