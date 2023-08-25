@@ -28,6 +28,21 @@ const routes = [
         name: "CategoryForm",
         component: () => import("pages/CategoryForm.vue"),
       },
+      {
+        path: "/product",
+        name: "Product",
+        component: () => import("pages/Product.vue"),
+        meta: {
+          menu: true,
+          icon: "inventory_2",
+          title: "Produtos",
+        },
+      },
+      {
+        path: "/product-form/:id?",
+        name: "ProductForm",
+        component: () => import("pages/ProductForm.vue"),
+      },
     ],
     meta: {
       auth: true,
