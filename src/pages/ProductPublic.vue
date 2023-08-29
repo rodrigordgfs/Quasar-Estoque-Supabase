@@ -28,7 +28,13 @@
 
         <template v-slot:item="props">
           <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4">
-            <q-card flat bordered>
+            <q-card
+              class="cursor-pointer"
+              @click="() => handleShowDetails(props.row)"
+              v-ripple:primary
+              flat
+              bordered
+            >
               <q-img
                 :src="props.row.img_url"
                 :ratio="4 / 3"
@@ -46,6 +52,10 @@
         </template>
       </q-table>
     </div>
+    <dialog-product-details
+      :isOpened="state.isModalOpened"
+      :product="state.productDetails"
+    />
   </q-page>
 </template>
 
@@ -55,15 +65,24 @@ import useNotify from "src/composables/UseNotify";
 import { defineComponent, onMounted, reactive } from "vue";
 import { formatCurrency } from "src/utils/format";
 import { useRoute } from "vue-router";
+import DialogProductDetails from "src/components/DialogProductDetails.vue";
 
 const TABLE = "product";
 
 export default defineComponent({
   name: "ProductPublicPage",
 
+  components: {
+    DialogProductDetails,
+  },
+
   setup() {
     const state = reactive({
       loading: false,
+
+      isModalOpened: false,
+
+      productDetails: {},
 
       columns: [
         {
@@ -121,6 +140,11 @@ export default defineComponent({
       }
     };
 
+    const handleShowDetails = (product) => {
+      state.productDetails = product;
+      state.isModalOpened = true;
+    };
+
     onMounted(() => {
       if (route.params.id) {
         handleGetProducts(route.params.id);
@@ -130,6 +154,7 @@ export default defineComponent({
     return {
       state,
       formatCurrency,
+      handleShowDetails,
     };
   },
 });
